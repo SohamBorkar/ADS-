@@ -1,85 +1,71 @@
-// Merge sort in C++
-
+// C++ Implementation of the Quick Sort Algorithm.
 #include <iostream>
 using namespace std;
 
-// Merge two subarrays L and M into arr
-void merge(int arr[], int p, int q, int r) {
-  
-  // Create L ← A[p..q] and M ← A[q+1..r]
-  int n1 = q - p + 1;
-  int n2 = r - q;
+int partition(int arr[], int start, int end)
+{
 
-  int L[n1], M[n2];
+	int pivot = arr[start];
 
-  for (int i = 0; i < n1; i++)
-    L[i] = arr[p + i];
-  for (int j = 0; j < n2; j++)
-    M[j] = arr[q + 1 + j];
+	int count = 0;
+	for (int i = start + 1; i <= end; i++) {
+		if (arr[i] <= pivot)
+			count++;
+	}
 
-  // Maintain current index of sub-arrays and main array
-  int i, j, k;
-  i = 0;
-  j = 0;
-  k = p;
+	// Giving pivot element its correct position
+	int pivotIndex = start + count;
+	swap(arr[pivotIndex], arr[start]);
 
-  // Until we reach either end of either L or M, pick larger among
-  // elements L and M and place them in the correct position at A[p..r]
-  while (i < n1 && j < n2) {
-    if (L[i] <= M[j]) {
-      arr[k] = L[i];
-      i++;
-    } else {
-      arr[k] = M[j];
-      j++;
-    }
-    k++;
-  }
+	// Sorting left and right parts of the pivot element
+	int i = start, j = end;
 
-  // When we run out of elements in either L or M,
-  // pick up the remaining elements and put in A[p..r]
-  while (i < n1) {
-    arr[k] = L[i];
-    i++;
-    k++;
-  }
+	while (i < pivotIndex && j > pivotIndex) {
 
-  while (j < n2) {
-    arr[k] = M[j];
-    j++;
-    k++;
-  }
+		while (arr[i] <= pivot) {
+			i++;
+		}
+
+		while (arr[j] > pivot) {
+			j--;
+		}
+
+		if (i < pivotIndex && j > pivotIndex) {
+			swap(arr[i++], arr[j--]);
+		}
+	}
+
+	return pivotIndex;
 }
 
-// Divide the array into two subarrays, sort them and merge them
-void mergeSort(int arr[], int l, int r) {
-  if (l < r) {
-    // m is the point where the array is divided into two subarrays
-    int m = l + (r - l) / 2;
+void quickSort(int arr[], int start, int end)
+{
 
-    mergeSort(arr, l, m);
-    mergeSort(arr, m + 1, r);
+	// base case
+	if (start >= end)
+		return;
 
-    // Merge the sorted subarrays
-    merge(arr, l, m, r);
-  }
+	// partitioning the array
+	int p = partition(arr, start, end);
+
+	// Sorting the left part
+	quickSort(arr, start, p - 1);
+
+	// Sorting the right part
+	quickSort(arr, p + 1, end);
 }
 
-// Print the array
-void printArray(int arr[], int size) {
-  for (int i = 0; i < size; i++)
-    cout << arr[i] << " ";
-  cout << endl;
-}
+int main()
+{
 
-// Driver program
-int main() {
-  int arr[] = {6, 5, 12, 10, 9, 1};
-  int size = sizeof(arr) / sizeof(arr[0]);
+	int arr[] = { 9, 3, 4, 2, 1, 8 };
+	int n = 6;
 
-  mergeSort(arr, 0, size - 1);
+	quickSort(arr, 0, n - 1);
 
-  cout << "Sorted array: \n";
-  printArray(arr, size);
-  return 0;
+	for (int i = 0; i < n; i++) {
+		cout << arr[i] << " ";
+	}
+
+	return 0;
 }
