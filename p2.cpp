@@ -2,58 +2,37 @@
 #include <iostream>
 using namespace std;
 
-int partition(int arr[], int start, int end)
-{
-
-	int pivot = arr[start];
-
-	int count = 0;
-	for (int i = start + 1; i <= end; i++) {
-		if (arr[i] <= pivot)
-			count++;
-	}
-
-	// Giving pivot element its correct position
-	int pivotIndex = start + count;
-	swap(arr[pivotIndex], arr[start]);
-
-	// Sorting left and right parts of the pivot element
-	int i = start, j = end;
-
-	while (i < pivotIndex && j > pivotIndex) {
-
-		while (arr[i] <= pivot) {
-			i++;
-		}
-
-		while (arr[j] > pivot) {
-			j--;
-		}
-
-		if (i < pivotIndex && j > pivotIndex) {
-			swap(arr[i++], arr[j--]);
-		}
-	}
-
-	return pivotIndex;
+void swap(int arr[], int i, int j){
+    int temp = arr[i];
+    arr[i] = arr[j]; 
+    arr[j] = temp;
 }
 
-void quickSort(int arr[], int start, int end)
-{
+int partition(int arr[], int l, int r){
+  int pivot = arr[r];
+  int i = l - 1; // to get the last element which is smaller than pivot point.
 
-	// base case
-	if (start >= end)
-		return;
-
-	// partitioning the array
-	int p = partition(arr, start, end);
-
-	// Sorting the left part
-	quickSort(arr, start, p - 1);
-
-	// Sorting the right part
-	quickSort(arr, p + 1, end);
+  for(int j = l; j < r; j++)
+  {
+    if (arr[j] < pivot)
+    {
+      i++;
+      swap(arr, i, j);
+    }
+  }
+  swap(arr, i+1, r);
+  return i+1;
 }
+
+void quickSort(int arr[], int l, int r){
+  if (l < r)
+  {
+    int pi = partition(arr, l, r);
+    quickSort(arr, l, pi - 1);
+    quickSort(arr, pi + 1, r); 
+  }
+  
+} 
 
 int main()
 {
@@ -69,3 +48,5 @@ int main()
 
 	return 0;
 }
+
+
